@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Coin, { COIN_SRC } from "@/components/shared/Coin";
 import MainButton from "@/components/shared/buttons/MainButton";
@@ -56,6 +56,49 @@ export default function CoinFlipGame() {
 
   // coin shows the player's pick while playing; the real outcome once settled.
   const facing = settled && lastOutcome ? lastOutcome.outcome : side;
+
+  // Celebrate a win with a confetti burst. canvas-confetti is loaded lazily
+  // (dynamic import) so it never weighs on the initial bundle / LCP, and the
+  // burst is suppressed when the OS asks to reduce motion. Keyed on the win
+  // phase + this specific outcome so it fires exactly once per winning flip.
+  const celebrated = useRef<string | null>(null);
+  useEffect(() => {
+    if (gamePhase !== "win" || !lastOutcome) return;
+    const key = lastOutcome.bet.signature;
+    if (celebrated.current === key) return;
+    celebrated.current = key;
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    let cancelled = false;
+    void import("canvas-confetti").then(({ default: confetti }) => {
+      if (cancelled) return;
+      const colors = ["#3ddc84", "#4dd0ff", "#ff49b8", "#f80498", "#268df4"];
+      const fire = (particleRatio: number, opts: Record<string, unknown>) =>
+        confetti({
+          origin: { y: 0.45 },
+          colors,
+          disableForReducedMotion: true,
+          particleCount: Math.floor(160 * particleRatio),
+          ...opts,
+        });
+      // layered bursts give a fuller "pop" than a single emit
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.9 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [gamePhase, lastOutcome]);
 
   const play = async () => {
     setError(null);
@@ -122,30 +165,32 @@ export default function CoinFlipGame() {
           )}
         </AnimatePresence>
 
-        <AnimatePresence>
-          {settled && lastOutcome && (
-            <motion.div
-              initial={{ opacity: 0, y: 14, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
-              className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-center"
-            >
-              <div
-                className={cn(
-                  "font-display text-[28px] font-extrabold tracking-tight",
-                  gamePhase === "win" ? "text-success" : "text-danger",
-                )}
-              >
-                {gamePhase === "win" ? "You won" : "You lost"}
-              </div>
-              <div className="vf-mono mt-0.5 text-[12px] text-white/50">
-                Landed on {lastOutcome.outcome}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* ---- result (below the coin so it never overlaps the artwork) ---- */}
+      <AnimatePresence>
+        {settled && lastOutcome && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+            className="mt-3 flex flex-col items-center text-center"
+          >
+            <div
+              className={cn(
+                "font-display text-[26px] font-extrabold tracking-tight sm:text-[28px]",
+                gamePhase === "win" ? "text-success" : "text-danger",
+              )}
+            >
+              {gamePhase === "win" ? "You won" : "You lost"}
+            </div>
+            <div className="vf-mono mt-0.5 text-[12px] text-white/50">
+              Landed on {lastOutcome.outcome}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ---- side selector ---- */}
       <div className="mt-6 grid grid-cols-2 gap-3">
