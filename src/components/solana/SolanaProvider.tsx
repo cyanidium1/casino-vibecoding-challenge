@@ -12,8 +12,11 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
     () => process.env.NEXT_PUBLIC_SOLANA_RPC ?? clusterApiUrl("devnet"),
     [],
   );
-  // Phantom (and other Wallet-Standard wallets) self-register, so the explicit
-  // adapter list can stay empty.
+  // Phantom, Solflare, Backpack (and any other Wallet-Standard wallet) all
+  // self-register via the Wallet Standard, so the explicit adapter list stays
+  // empty — every installed standard wallet shows up in the picker with no
+  // per-wallet adapter package. The picker (WalletConnectModal) orders them
+  // Phantom → Solflare → Backpack.
   const wallets = useMemo(() => [], []);
 
   // Surfaces connection failures + user-rejected connect prompts as toasts.
