@@ -1,10 +1,11 @@
 import Container from "@/components/shared/container/Container";
 import StatusBadge from "@/components/shared/StatusBadge";
-import { GithubIcon, ArrowUpRight } from "@/components/shared/icons";
+import { GithubIcon, TelegramIcon, ArrowUpRight } from "@/components/shared/icons";
 import { CASINO } from "@/lib/config";
 
 const LINKS = [
-  { label: "GitHub", href: "https://github.com", icon: <GithubIcon className="h-4 w-4" /> },
+  { label: "GitHub", href: "https://github.com/cyanidium1", icon: <GithubIcon className="h-4 w-4" /> },
+  { label: "Telegram", href: "https://t.me/fedirdev", icon: <TelegramIcon className="h-4 w-4" /> },
   { label: "Live Demo", href: "#top", icon: <ArrowUpRight className="h-4 w-4" /> },
   { label: "Fairness", href: "#fairness", icon: <ArrowUpRight className="h-4 w-4" /> },
 ];
