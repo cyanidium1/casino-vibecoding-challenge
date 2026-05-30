@@ -87,12 +87,12 @@ export default function CasinoHero() {
 
             <motion.div
               variants={staggerItem}
-              className="mt-7 flex items-center gap-3 text-[12px] text-white/40"
+              className="mt-7 flex flex-col items-start gap-2.5 text-[12px] leading-relaxed text-white/40 xs:flex-row xs:items-center xs:gap-3"
             >
-              <span className="vf-mono rounded-md border border-white/10 bg-white/[0.03] px-2 py-1">
+              <span className="vf-mono shrink-0 rounded-md border border-white/10 bg-white/[0.03] px-2 py-1">
                 TESTNET ONLY
               </span>
-              <span className="h-1 w-1 rounded-full bg-white/20" />
+              <span className="hidden h-1 w-1 shrink-0 rounded-full bg-white/20 xs:block" />
               <span>No real money involved — devnet tokens only.</span>
             </motion.div>
           </motion.div>
