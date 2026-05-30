@@ -107,7 +107,7 @@ export default function CoinFlipGame() {
   };
 
   return (
-    <div className="vf-card relative overflow-hidden p-6 sm:p-8">
+    <div className="vf-card relative overflow-hidden p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="font-display text-[18px] font-bold tracking-tight text-white">
@@ -121,7 +121,7 @@ export default function CoinFlipGame() {
       </div>
 
       {/* ---- coin stage ---- */}
-      <div className="relative mt-6 flex h-[260px] items-center justify-center sm:h-[300px]">
+      <div className="relative mt-4 flex h-[190px] items-center justify-center sm:h-[220px]">
         <div
           className={cn(
             "rounded-full",
@@ -132,7 +132,7 @@ export default function CoinFlipGame() {
           <Coin
             facing={facing}
             spinning={spinning}
-            size={210}
+            size={172}
             ambient={!spinning}
           />
         </div>
@@ -171,7 +171,7 @@ export default function CoinFlipGame() {
          A fixed-height slot below the coin reserves the space permanently and
          the label is absolutely positioned inside it, so the card height never
          shifts as the result appears/clears (and it never overlaps the coin). */}
-      <div className="relative mt-3 h-[64px]">
+      <div className="relative mt-2 h-[60px]">
         <AnimatePresence>
           {settled && lastOutcome && (
             <motion.div
@@ -198,7 +198,7 @@ export default function CoinFlipGame() {
       </div>
 
       {/* ---- side selector ---- */}
-      <div className="mt-6 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-3">
         {(["heads", "tails"] as const).map((s) => (
           <button
             key={s}
@@ -209,7 +209,7 @@ export default function CoinFlipGame() {
               if (settled) resetGame();
             }}
             className={cn(
-              "group relative overflow-hidden rounded-2xl border px-4 py-4 text-left transition-all disabled:cursor-not-allowed",
+              "group relative overflow-hidden rounded-2xl border px-4 py-3 text-left transition-all disabled:cursor-not-allowed",
               side === s
                 ? s === "heads"
                   ? "border-blue/60 bg-blue/10"
@@ -250,7 +250,7 @@ export default function CoinFlipGame() {
       </div>
 
       {/* ---- amount ---- */}
-      <div className="mt-5">
+      <div className="mt-4">
         <div className="mb-2 flex items-center justify-between">
           <span className="vf-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
             Bet amount
@@ -274,7 +274,7 @@ export default function CoinFlipGame() {
       </div>
 
       {/* ---- payout summary ---- */}
-      <div className="mt-5 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-3">
           <div className="vf-mono text-[10px] uppercase tracking-[0.12em] text-white/40">
             Potential payout
@@ -312,7 +312,7 @@ export default function CoinFlipGame() {
       {error && <p className="mt-3 text-[12px] text-danger">{error}</p>}
 
       {/* ---- action ---- */}
-      <div className="mt-5">
+      <div className="mt-4">
         {!wallet.connected ? (
           <MainButton
             fullWidth
