@@ -43,10 +43,27 @@ const headingFallback = Unbounded({
   display: "swap",
 });
 
+// Absolute base for OG/Twitter image URLs. Prefers an explicit site URL, then
+// Vercel's auto-injected production host, then localhost in dev — so the
+// `opengraph-image.png` file-convention asset always resolves to a full URL.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
+const title = "VibeFlip Casino — Verifiable Coin Flip on Solana Devnet";
+const description =
+  "VibeFlip is a provably-fair coin flip casino running on Solana Devnet. Testnet only — no real money involved. Flip, win, and verify every outcome on-chain.";
+
 export const metadata: Metadata = {
-  title: "VibeFlip Casino — Verifiable Coin Flip on Solana Devnet",
-  description:
-    "VibeFlip is a provably-fair coin flip casino running on Solana Devnet. Testnet only — no real money involved. Flip, win, and verify every outcome on-chain.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: title,
+    template: "%s · VibeFlip Casino",
+  },
+  description,
+  applicationName: "VibeFlip Casino",
   keywords: [
     "Solana",
     "Devnet",
@@ -57,8 +74,20 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "VibeFlip Casino",
-    description: "Verifiable Coin Flip Casino on Solana Devnet.",
+    description: "Verifiable coin-flip casino on Solana Devnet.",
+    siteName: "VibeFlip Casino",
     type: "website",
+    url: "/",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VibeFlip Casino",
+    description: "Verifiable coin-flip casino on Solana Devnet.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
