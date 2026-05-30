@@ -33,7 +33,7 @@ export interface WalletState {
   address: string | null;
   /** SOL-denominated devnet wallet balance */
   walletBalance: number;
-  /** VIBE tokens held inside the casino vault */
+  /** SOL (lamports, as a float) held in the casino ledger/vault */
   casinoBalance: number;
 }
 

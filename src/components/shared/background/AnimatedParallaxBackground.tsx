@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import FloatingIconLayer, { type FloatingIconSpec } from "./FloatingIconLayer";
 import {
   CodeGlyph,
@@ -46,15 +46,24 @@ export default function AnimatedParallaxBackground() {
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll();
 
+  // Spring-smooth the raw scroll progress so layers glide instead of snapping
+  // to each scroll event — removes the "jerky" feel on wheel/trackpad scroll.
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 26,
+    mass: 0.5,
+    restDelta: 0.0005,
+  });
+
   // Depth-mapped scroll movement. Far moves least, near moves most.
-  const farY = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const midY = useTransform(scrollYProgress, [0, 1], [0, -140]);
-  const nearY = useTransform(scrollYProgress, [0, 1], [0, -240]);
+  const farY = useTransform(progress, [0, 1], [0, -110]);
+  const midY = useTransform(progress, [0, 1], [0, -230]);
+  const nearY = useTransform(progress, [0, 1], [0, -380]);
 
   // Orbs drift gently in the opposite direction for counter-parallax depth.
-  const orbPink = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const orbBlue = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const orbPurple = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const orbPink = useTransform(progress, [0, 1], [0, 190]);
+  const orbBlue = useTransform(progress, [0, 1], [0, 130]);
+  const orbPurple = useTransform(progress, [0, 1], [0, -150]);
 
   return (
     <div
@@ -66,7 +75,6 @@ export default function AnimatedParallaxBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(48% 40% at 82% -6%, rgba(248,4,152,0.20), transparent 70%)," +
             "radial-gradient(44% 42% at 4% 14%, rgba(38,141,244,0.16), transparent 70%)," +
             "radial-gradient(62% 52% at 50% 118%, rgba(79,93,255,0.14), transparent 70%)",
         }}

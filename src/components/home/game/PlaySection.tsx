@@ -10,9 +10,8 @@ export default function PlaySection() {
       <Container>
         <SectionHeading
           eyebrow="The Game"
-          index="01 / 06"
           title="Pick a side. Set your stake. Flip."
-          description="Heads or tails — a single on-chain flip decides it. Connect your wallet, deposit devnet VIBE, and play with a fixed 2% house edge."
+          description="Heads or tails — a single on-chain flip decides it. Connect your wallet, deposit devnet SOL, and play with a fixed 2% house edge."
         />
 
         <div className="mt-12 grid items-start gap-6 lg:grid-cols-[1fr_380px]">

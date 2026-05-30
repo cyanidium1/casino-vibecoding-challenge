@@ -18,13 +18,13 @@ const PILLARS = [
   },
   {
     n: "02",
-    title: "Verifiable randomness",
-    body: "Outcomes are derived from a provably-fair seed committed before your bet — no after-the-fact tampering.",
+    title: "Open randomness",
+    body: "Each outcome is a SHA-256 of the slot, clock, your address and a client seed — fully reproducible from the transaction. Demo-grade on Devnet; production swaps in a VRF.",
   },
   {
     n: "03",
     title: "Smart-contract logic",
-    body: "Game rules and payouts live in an audited program. The 2% edge is fixed in code, not adjustable behind the scenes.",
+    body: "Game rules and payouts live in an open-source program. The 2% edge is fixed in code, not adjustable behind the scenes.",
   },
   {
     n: "04",
@@ -42,7 +42,6 @@ export default function FairnessSection() {
       <Container>
         <SectionHeading
           eyebrow="Provably Fair"
-          index="05 / 06"
           title={
             <>
               Don&apos;t trust us. <span className="vf-grad-text">Verify it.</span>

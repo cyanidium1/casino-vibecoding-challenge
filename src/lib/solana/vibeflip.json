@@ -1,0 +1,128 @@
+{
+  "address": "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS",
+  "metadata": {
+    "name": "vibeflip",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "VibeFlip — verifiable native-SOL coin-flip casino (Solana Devnet)"
+  },
+  "instructions": [
+    {
+      "name": "deposit",
+      "discriminator": [242, 35, 198, 137, 82, 225, 242, 182],
+      "accounts": [
+        { "name": "player", "writable": true, "signer": true },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": { "seeds": [{ "kind": "const", "value": [118, 97, 117, 108, 116] }] }
+        },
+        {
+          "name": "player_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 108, 97, 121, 101, 114] },
+              { "kind": "account", "path": "player" }
+            ]
+          }
+        },
+        { "name": "system_program", "address": "11111111111111111111111111111111" }
+      ],
+      "args": [{ "name": "amount", "type": "u64" }]
+    },
+    {
+      "name": "withdraw",
+      "discriminator": [183, 18, 70, 156, 148, 109, 161, 34],
+      "accounts": [
+        { "name": "player", "writable": true, "signer": true },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": { "seeds": [{ "kind": "const", "value": [118, 97, 117, 108, 116] }] }
+        },
+        {
+          "name": "player_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 108, 97, 121, 101, 114] },
+              { "kind": "account", "path": "player" }
+            ]
+          }
+        },
+        { "name": "system_program", "address": "11111111111111111111111111111111" }
+      ],
+      "args": [{ "name": "amount", "type": "u64" }]
+    },
+    {
+      "name": "place_bet",
+      "discriminator": [222, 62, 67, 220, 63, 166, 126, 33],
+      "accounts": [
+        { "name": "player", "signer": true },
+        {
+          "name": "player_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              { "kind": "const", "value": [112, 108, 97, 121, 101, 114] },
+              { "kind": "account", "path": "player" }
+            ]
+          }
+        }
+      ],
+      "args": [
+        { "name": "side", "type": "u8" },
+        { "name": "amount", "type": "u64" },
+        { "name": "client_seed", "type": "u64" }
+      ]
+    }
+  ],
+  "accounts": [
+    { "name": "PlayerState", "discriminator": [56, 3, 60, 86, 174, 16, 244, 195] }
+  ],
+  "events": [
+    { "name": "FlipResult", "discriminator": [206, 27, 241, 188, 191, 121, 211, 88] }
+  ],
+  "errors": [
+    { "code": 6000, "name": "ZeroAmount", "msg": "Amount must be greater than zero" },
+    { "code": 6001, "name": "InsufficientBalance", "msg": "Insufficient casino balance" },
+    { "code": 6002, "name": "InvalidSide", "msg": "side must be 0 (heads) or 1 (tails)" },
+    { "code": 6003, "name": "WrongPlayer", "msg": "Player account / owner mismatch" },
+    { "code": 6004, "name": "MathOverflow", "msg": "Arithmetic overflow" }
+  ],
+  "types": [
+    {
+      "name": "PlayerState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "player", "type": "pubkey" },
+          { "name": "balance", "type": "u64" },
+          { "name": "bet_count", "type": "u64" },
+          { "name": "total_wagered", "type": "u64" },
+          { "name": "last_result", "type": "u8" },
+          { "name": "bump", "type": "u8" }
+        ]
+      }
+    },
+    {
+      "name": "FlipResult",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "player", "type": "pubkey" },
+          { "name": "nonce", "type": "u64" },
+          { "name": "side", "type": "u8" },
+          { "name": "outcome", "type": "u8" },
+          { "name": "won", "type": "bool" },
+          { "name": "amount", "type": "u64" },
+          { "name": "net_win", "type": "u64" },
+          { "name": "new_balance", "type": "u64" },
+          { "name": "client_seed", "type": "u64" },
+          { "name": "slot", "type": "u64" }
+        ]
+      }
+    }
+  ]
+}

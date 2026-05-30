@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Inter, JetBrains_Mono } from "next/font/google";
+import { SolanaProvider } from "@/components/solana/SolanaProvider";
 import { CasinoProvider } from "@/context/CasinoProvider";
 import "./globals.css";
 
@@ -55,7 +56,9 @@ export default function RootLayout({
       <body
         className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
       >
-        <CasinoProvider>{children}</CasinoProvider>
+        <SolanaProvider>
+          <CasinoProvider>{children}</CasinoProvider>
+        </SolanaProvider>
       </body>
     </html>
   );

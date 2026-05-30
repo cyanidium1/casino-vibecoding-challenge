@@ -35,7 +35,12 @@ export default function SectionHeading({
         className,
       )}
     >
-      <Eyebrow index={index}>{eyebrow}</Eyebrow>
+      <Eyebrow
+        index={index}
+        className={align === "center" ? "self-center" : "self-start"}
+      >
+        {eyebrow}
+      </Eyebrow>
       <h2 className="max-w-[18ch] font-display text-[clamp(30px,4.4vw,52px)] font-bold uppercase leading-[1.02] tracking-[-0.025em] text-white text-balance">
         {title}
       </h2>

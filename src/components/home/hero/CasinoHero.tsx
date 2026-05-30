@@ -146,8 +146,8 @@ export default function CasinoHero() {
           className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/8 bg-white/[0.02] sm:grid-cols-4"
         >
           {[
-            { k: "Total flips", v: "128,402" },
-            { k: "VIBE wagered", v: "4.2M" },
+            { k: "Settlement", v: "On-chain" },
+            { k: "Payout", v: "1.96×" },
             { k: "Avg. settlement", v: "0.5s" },
             { k: "House edge", v: "2.0%" },
           ].map((s) => (

@@ -21,13 +21,13 @@ interface TransferModalProps {
 
 const COPY: Record<Mode, { title: string; subtitle: string; cta: string }> = {
   deposit: {
-    title: "Deposit VIBE",
-    subtitle: "Move tokens from your wallet into the casino vault.",
+    title: "Deposit SOL",
+    subtitle: "Move SOL from your wallet into the casino vault.",
     cta: "Deposit",
   },
   withdraw: {
-    title: "Withdraw VIBE",
-    subtitle: "Move tokens from the casino vault back to your wallet.",
+    title: "Withdraw SOL",
+    subtitle: "Move SOL from the casino vault back to your wallet.",
     cta: "Withdraw",
   },
 };

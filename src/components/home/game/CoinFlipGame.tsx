@@ -200,7 +200,7 @@ export default function CoinFlipGame() {
       {wallet.connected && (tooLow || tooHigh || overBalance) && (
         <p className="mt-3 text-[12px] text-danger">
           {overBalance
-            ? "Bet exceeds your casino balance — deposit more VIBE."
+            ? "Bet exceeds your casino balance — deposit more SOL."
             : tooLow
               ? `Minimum bet is ${CASINO.minBet} ${CASINO.tokenSymbol}.`
               : `Maximum bet is ${CASINO.maxBet} ${CASINO.tokenSymbol}.`}
