@@ -167,30 +167,35 @@ export default function CoinFlipGame() {
 
       </div>
 
-      {/* ---- result (below the coin so it never overlaps the artwork) ---- */}
-      <AnimatePresence>
-        {settled && lastOutcome && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-            className="mt-3 flex flex-col items-center text-center"
-          >
-            <div
-              className={cn(
-                "font-display text-[26px] font-extrabold tracking-tight sm:text-[28px]",
-                gamePhase === "win" ? "text-success" : "text-danger",
-              )}
+      {/* ---- result ----
+         A fixed-height slot below the coin reserves the space permanently and
+         the label is absolutely positioned inside it, so the card height never
+         shifts as the result appears/clears (and it never overlaps the coin). */}
+      <div className="relative mt-3 h-[64px]">
+        <AnimatePresence>
+          {settled && lastOutcome && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+              className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
             >
-              {gamePhase === "win" ? "You won" : "You lost"}
-            </div>
-            <div className="vf-mono mt-0.5 text-[12px] text-white/50">
-              Landed on {lastOutcome.outcome}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div
+                className={cn(
+                  "font-display text-[26px] font-extrabold tracking-tight sm:text-[28px]",
+                  gamePhase === "win" ? "text-success" : "text-danger",
+                )}
+              >
+                {gamePhase === "win" ? "You won" : "You lost"}
+              </div>
+              <div className="vf-mono mt-0.5 text-[12px] text-white/50">
+                Landed on {lastOutcome.outcome}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* ---- side selector ---- */}
       <div className="mt-6 grid grid-cols-2 gap-3">
