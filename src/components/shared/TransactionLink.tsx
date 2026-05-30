@@ -9,7 +9,7 @@ interface TransactionLinkProps {
   className?: string;
 }
 
-/** Links a (mock) signature to the Solana Devnet explorer. */
+/** Links a confirmed transaction signature to the Solana Devnet explorer. */
 export default function TransactionLink({
   signature,
   label,

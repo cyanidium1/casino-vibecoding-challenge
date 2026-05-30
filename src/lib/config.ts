@@ -5,9 +5,9 @@ export const CASINO = {
   network: "Solana Devnet",
   /** house edge applied to the fair 2x payout */
   edge: 0.02,
-  minBet: 0.05,
+  minBet: 0.01,
   maxBet: 5,
-  quickAmounts: [0.1, 0.25, 0.5] as const,
+  quickAmounts: [0.01, 0.05, 0.1, 0.5] as const,
   explorerBase: "https://explorer.solana.com",
   explorerCluster: "devnet",
 } as const;
@@ -19,8 +19,8 @@ export const CASINO = {
  * `src/lib/solana/vibeflip.json` (`address`), then re-derive the vault.
  */
 export const ONCHAIN = {
-  programId: "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS",
-  vaultAddress: "BtWhNzGgdC9aX14VfQtYQuiqvxidMSAzParX6UUXzgn2",
+  programId: "H3mfzXMz1R1Vw2ZFNiQ37QHsBSvL9YFVbo2TuhBEd6Wq",
+  vaultAddress: "GqnBgNuEYQWmR2Yx1w7TaqT9VPR1hnnuj2AwZKVu7jAm",
 } as const;
 
 /** payout for a winning flip: 2x stake minus house edge. */

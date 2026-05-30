@@ -44,7 +44,8 @@ export default function FairnessSection() {
           eyebrow="Provably Fair"
           title={
             <>
-              Don&apos;t trust us. <span className="vf-grad-text">Verify it.</span>
+              Don<span className="relative top-[0.34em]">&rsquo;</span>t trust
+              us. <span className="vf-grad-text">Verify it.</span>
             </>
           }
           description="VibeFlip is built so you never have to take our word for anything. The house edge, the odds, and every outcome are all on-chain and open to inspection."

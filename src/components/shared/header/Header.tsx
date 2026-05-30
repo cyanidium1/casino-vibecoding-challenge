@@ -45,14 +45,14 @@ export default function Header() {
               : "bg-transparent",
           )}
         />
-        <a href="#top" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0899FC,#FF49B8)] font-display text-[18px] font-extrabold text-white shadow-[0_8px_24px_-6px_rgba(248,4,152,0.7)]">
-            V
-          </div>
-          <span className="font-display text-[17px] font-bold uppercase tracking-tight">
-            {CASINO.name}
-            <span className="text-main-light">Casino</span>
-          </span>
+        <a href="#top" className="flex items-center" aria-label={`${CASINO.name} Casino`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo.webp"
+            alt={`${CASINO.name} Casino`}
+            draggable={false}
+            className="h-7 w-auto select-none sm:h-8"
+          />
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">

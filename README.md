@@ -9,8 +9,8 @@ on-chain Anchor program and verifiable on the Solana Explorer.
 > demo-grade (see *Hardest unknown* below) and must not be used with real funds.
 
 - **Live URL:** _<add Vercel URL after deploy>_
-- **Program (Devnet):** `Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS` _(replace with your deployed id)_
-- **Vault PDA:** `BtWhNzGgdC9aX14VfQtYQuiqvxidMSAzParX6UUXzgn2`
+- **Program (Devnet):** `H3mfzXMz1R1Vw2ZFNiQ37QHsBSvL9YFVbo2TuhBEd6Wq`
+- **Vault PDA:** `GqnBgNuEYQWmR2Yx1w7TaqT9VPR1hnnuj2AwZKVu7jAm`
 
 ---
 

@@ -29,6 +29,7 @@
   --color-danger-deep: #c01e3c;
 
   --font-display: var(--font-display), sans-serif;
+  --font-heading: var(--font-heading), var(--font-heading-fallback), var(--font-display), sans-serif;
   --font-body: var(--font-body), sans-serif;
   --font-mono: var(--font-mono), monospace;
 }
@@ -245,4 +246,66 @@
     background: rgba(255, 73, 184, 0.35);
     border-radius: 999px;
   }
+}
+
+/* ---- sonner toasts: dark-neon casino styling (top-level to beat injected CSS) ---- */
+[data-sonner-toaster] {
+  --normal-bg: rgba(26, 24, 32, 0.92);
+  --normal-border: rgba(255, 255, 255, 0.1);
+  --normal-text: #ffffff;
+}
+
+.vf-toast {
+  background: rgba(26, 24, 32, 0.94) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 44px -14px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* neon accent per toast type */
+.vf-toast[data-type="success"] {
+  border-color: rgba(61, 220, 132, 0.5) !important;
+  box-shadow: 0 0 26px -8px rgba(61, 220, 132, 0.5),
+    0 14px 44px -14px rgba(0, 0, 0, 0.75) !important;
+}
+.vf-toast[data-type="error"] {
+  border-color: rgba(255, 77, 109, 0.5) !important;
+  box-shadow: 0 0 26px -8px rgba(255, 77, 109, 0.5),
+    0 14px 44px -14px rgba(0, 0, 0, 0.75) !important;
+}
+.vf-toast[data-type="loading"] {
+  border-color: rgba(38, 141, 244, 0.5) !important;
+  box-shadow: 0 0 26px -8px rgba(38, 141, 244, 0.45),
+    0 14px 44px -14px rgba(0, 0, 0, 0.75) !important;
+}
+
+.vf-toast-title {
+  font-weight: 700;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.vf-toast-desc {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 11.5px;
+  font-family: var(--font-mono), monospace;
+  word-break: break-word;
+}
+
+.vf-toast-action {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #0899fc, #ff49b8) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  padding: 4px 10px !important;
+}
+
+.vf-toast-close {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }

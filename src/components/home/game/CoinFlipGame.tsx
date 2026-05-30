@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import Coin from "@/components/shared/Coin";
+import Coin, { COIN_SRC } from "@/components/shared/Coin";
 import MainButton from "@/components/shared/buttons/MainButton";
 import AmountInput from "@/components/shared/AmountInput";
 import StatusBadge from "@/components/shared/StatusBadge";
@@ -15,16 +15,38 @@ import { cn } from "@/lib/utils/cn";
 import type { CoinSide } from "@/types";
 
 export default function CoinFlipGame() {
-  const { wallet, gamePhase, lastOutcome, flip, connect, connecting, resetGame } =
-    useCasino();
+  const {
+    wallet,
+    gamePhase,
+    flipStatus,
+    lastOutcome,
+    flip,
+    connect,
+    connecting,
+    resetGame,
+  } = useCasino();
   const [side, setSide] = useState<CoinSide>("heads");
-  const [amount, setAmount] = useState("5");
+  const [amount, setAmount] = useState("0.01");
   const [error, setError] = useState<string | null>(null);
 
   const numeric = Number(amount) || 0;
   const pending = gamePhase === "pending";
   const settled = gamePhase === "win" || gamePhase === "lose";
   const potential = payoutFor(numeric);
+
+  // The coin spins continuously while the flip is in flight — through the wallet
+  // signature prompt and on-chain confirmation — and only lands once settled.
+  const spinning =
+    flipStatus === "awaiting_signature" || flipStatus === "confirming";
+
+  const statusLabel =
+    flipStatus === "awaiting_signature"
+      ? "Waiting for wallet signature…"
+      : flipStatus === "confirming"
+        ? "Confirming transaction…"
+        : flipStatus === "settled"
+          ? "Flip settled on-chain"
+          : null;
 
   const tooLow = numeric < CASINO.minBet;
   const tooHigh = numeric > CASINO.maxBet;
@@ -64,8 +86,41 @@ export default function CoinFlipGame() {
             gamePhase === "lose" && "vf-pulse-lose",
           )}
         >
-          <Coin facing={facing} spinning={pending} size={210} ambient={gamePhase === "idle"} />
+          <Coin
+            facing={facing}
+            spinning={spinning}
+            size={210}
+            ambient={!spinning}
+          />
         </div>
+
+        {/* live flip status near the coin (signature / confirming / settled) */}
+        <AnimatePresence>
+          {statusLabel && (
+            <motion.div
+              key={flipStatus}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute top-1 left-1/2 -translate-x-1/2"
+            >
+              <span
+                className={cn(
+                  "vf-mono inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px]",
+                  spinning
+                    ? "border-white/10 bg-white/[0.04] text-white/60"
+                    : "border-success/30 bg-success/10 text-success",
+                )}
+              >
+                {spinning && (
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current" />
+                )}
+                {statusLabel}
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {settled && lastOutcome && (
@@ -132,16 +187,14 @@ export default function CoinFlipGame() {
             >
               {s}
             </span>
-            <span
-              className={cn(
-                "absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-bold",
-                s === "heads"
-                  ? "bg-[radial-gradient(circle_at_30%_30%,#4dd0ff,#0c63b8)] text-white"
-                  : "bg-[radial-gradient(circle_at_30%_30%,#ff9fda,#b00270)] text-white",
-              )}
-            >
-              {s === "heads" ? "V" : "✦"}
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={COIN_SRC[s]}
+              alt=""
+              aria-hidden
+              draggable={false}
+              className="absolute right-3 top-3 h-8 w-8 select-none object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.5)]"
+            />
           </button>
         ))}
       </div>

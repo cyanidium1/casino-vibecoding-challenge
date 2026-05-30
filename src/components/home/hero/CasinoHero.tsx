@@ -42,7 +42,7 @@ export default function CasinoHero() {
 
             <motion.h1
               variants={staggerItem}
-              className="mt-6 font-display text-[clamp(40px,7vw,76px)] font-extrabold uppercase leading-[0.98] tracking-[-0.03em] text-white"
+              className="mt-6 font-heading text-[clamp(36px,6.4vw,68px)] font-extrabold uppercase leading-[1.02] tracking-[-0.01em] text-white"
             >
               Flip the coin.
               <br />

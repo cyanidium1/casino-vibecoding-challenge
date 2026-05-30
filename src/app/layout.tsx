@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Inter, JetBrains_Mono } from "next/font/google";
+import { Manrope, Inter, JetBrains_Mono, Unbounded } from "next/font/google";
+import localFont from "next/font/local";
 import { SolanaProvider } from "@/components/solana/SolanaProvider";
 import { CasinoProvider } from "@/context/CasinoProvider";
+import ToastProvider from "@/components/shared/ToastProvider";
 import "./globals.css";
 
 const display = Manrope({
@@ -22,6 +24,22 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap",
+});
+
+// Primary display font for page headings (hero + section titles).
+const heading = localFont({
+  src: "./fonts/ZenterSPDemo-Black.otf",
+  variable: "--font-heading",
+  weight: "900",
+  display: "swap",
+});
+
+// Fallback heading face (covers any glyphs the Zenter SP demo lacks).
+const headingFallback = Unbounded({
+  variable: "--font-heading-fallback",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
   display: "swap",
 });
 
@@ -54,11 +72,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${display.variable} ${body.variable} ${mono.variable} antialiased`}
+        className={`${display.variable} ${body.variable} ${mono.variable} ${heading.variable} ${headingFallback.variable} antialiased`}
       >
         <SolanaProvider>
           <CasinoProvider>{children}</CasinoProvider>
         </SolanaProvider>
+        <ToastProvider />
       </body>
     </html>
   );

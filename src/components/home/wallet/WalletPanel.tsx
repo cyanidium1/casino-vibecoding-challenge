@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import MainButton from "@/components/shared/buttons/MainButton";
 import StatusBadge from "@/components/shared/StatusBadge";
@@ -23,12 +23,26 @@ export default function WalletPanel() {
   const [deposit, setDeposit] = useState(false);
   const [withdraw, setWithdraw] = useState(false);
   const [copied, setCopied] = useState(false);
+  // Track the reset timer so we can clear it on unmount / re-copy (no leak, no
+  // setState-after-unmount).
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    return () => {
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+    };
+  }, []);
 
   const copy = async () => {
     if (!wallet.address) return;
-    await navigator.clipboard.writeText(wallet.address);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1600);
+    try {
+      await navigator.clipboard.writeText(wallet.address);
+      setCopied(true);
+      if (copyTimer.current) clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(() => setCopied(false), 1600);
+    } catch {
+      // Clipboard can reject (denied permission / insecure context). Non-fatal —
+      // just skip the "copied" confirmation rather than throwing unhandled.
+    }
   };
 
   return (

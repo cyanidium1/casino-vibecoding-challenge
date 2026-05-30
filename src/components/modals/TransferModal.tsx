@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Modal from "@/components/modals/Modal";
 import MainButton from "@/components/shared/buttons/MainButton";
@@ -18,6 +18,8 @@ interface TransferModalProps {
   open: boolean;
   onClose: () => void;
 }
+
+const AUTO_CLOSE_SECONDS = 5;
 
 const COPY: Record<Mode, { title: string; subtitle: string; cta: string }> = {
   deposit: {
@@ -38,6 +40,7 @@ export default function TransferModal({ mode, open, onClose }: TransferModalProp
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(AUTO_CLOSE_SECONDS);
 
   const source = mode === "deposit" ? wallet.walletBalance : wallet.casinoBalance;
   const numeric = Number(amount) || 0;
@@ -50,6 +53,7 @@ export default function TransferModal({ mode, open, onClose }: TransferModalProp
     setError(null);
     setSignature(null);
     setPending(false);
+    setCountdown(AUTO_CLOSE_SECONDS);
   };
 
   const handleClose = () => {
@@ -57,6 +61,30 @@ export default function TransferModal({ mode, open, onClose }: TransferModalProp
     reset();
     onClose();
   };
+
+  // Keep the interval effect free of changing deps by funneling close through a ref.
+  const closeRef = useRef(handleClose);
+  closeRef.current = handleClose;
+
+  // Auto-close the success view after a short countdown. The tick only updates
+  // state here — closing is handled by the effect below so we never call the
+  // parent's setState from inside a state updater (which runs during render).
+  useEffect(() => {
+    if (!open || !signature) return;
+    setCountdown(AUTO_CLOSE_SECONDS);
+    const id = setInterval(() => {
+      setCountdown((prev) => (prev <= 1 ? 0 : prev - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [open, signature]);
+
+  // Close once the countdown reaches zero (kept out of the updater above to
+  // avoid "Cannot update a component while rendering a different component").
+  useEffect(() => {
+    if (open && signature && countdown === 0) {
+      closeRef.current();
+    }
+  }, [open, signature, countdown]);
 
   const submit = async () => {
     setError(null);
@@ -107,7 +135,7 @@ export default function TransferModal({ mode, open, onClose }: TransferModalProp
               variant="ghost"
               onClick={handleClose}
             >
-              Done
+              Done ({countdown})
             </MainButton>
           </motion.div>
         ) : (

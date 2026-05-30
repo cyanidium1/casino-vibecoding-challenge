@@ -2,6 +2,21 @@ export type CoinSide = "heads" | "tails";
 
 export type GamePhase = "idle" | "pending" | "win" | "lose";
 
+/**
+ * Fine-grained lifecycle of a single flip, wired to the real Solana tx flow:
+ * - idle               nothing in flight
+ * - awaiting_signature waiting for the wallet (Phantom) to sign — coin spins
+ * - confirming         tx submitted, awaiting on-chain confirmation — coin spins
+ * - settled            confirmed + result fetched — coin lands once
+ * - error              rejected / failed — coin returns smoothly to idle
+ */
+export type FlipStatus =
+  | "idle"
+  | "awaiting_signature"
+  | "confirming"
+  | "settled"
+  | "error";
+
 export type BetResult = "win" | "lose";
 
 export interface Bet {
@@ -15,8 +30,12 @@ export interface Bet {
   result: BetResult;
   /** net payout credited to the player (0 on a loss) */
   payout: number;
-  /** fake Solana transaction signature */
+  /** Solana transaction signature (real, confirmed on Devnet) */
   signature: string;
+  /** player wallet (base58) — set for on-chain/public history rows */
+  player?: string;
+  /** casino ledger balance after this flip, in SOL — when known from the event */
+  newBalance?: number;
 }
 
 export interface Transaction {

@@ -41,7 +41,7 @@ export default function SectionHeading({
       >
         {eyebrow}
       </Eyebrow>
-      <h2 className="max-w-[18ch] font-display text-[clamp(30px,4.4vw,52px)] font-bold uppercase leading-[1.02] tracking-[-0.025em] text-white text-balance">
+      <h2 className="max-w-[18ch] font-heading text-[clamp(27px,4vw,46px)] font-bold uppercase leading-[1.08] tracking-[-0.005em] text-white text-balance">
         {title}
       </h2>
       {description && (

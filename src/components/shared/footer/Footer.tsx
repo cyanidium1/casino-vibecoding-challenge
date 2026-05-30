@@ -15,14 +15,14 @@ export default function Footer() {
       <Container>
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0899FC,#FF49B8)] font-display text-[18px] font-extrabold text-white shadow-[0_8px_24px_-6px_rgba(248,4,152,0.7)]">
-                V
-              </div>
-              <span className="font-display text-[18px] font-bold uppercase tracking-tight">
-                {CASINO.name}
-                <span className="text-main-light">Casino</span>
-              </span>
+            <div className="flex items-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/logo.webp"
+                alt={`${CASINO.name} Casino`}
+                draggable={false}
+                className="h-8 w-auto select-none"
+              />
             </div>
             <p className="mt-4 text-[13px] leading-relaxed text-white/45">
               A provably-fair coin flip casino built for the Vibe-Code Challenge.
