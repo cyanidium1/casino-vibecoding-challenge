@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useWallet, type Wallet } from "@solana/wallet-adapter-react";
 import { WalletReadyState } from "@solana/wallet-adapter-base";
 import Modal from "@/components/modals/Modal";
@@ -9,6 +9,21 @@ import { notifyInfo } from "@/lib/notifications";
 
 const PHANTOM = "Phantom";
 const PHANTOM_URL = "https://phantom.app/download";
+
+/**
+ * Phantom universal "browse" link. On a phone, tapping this opens the dApp
+ * *inside* Phantom's in-app browser — where the wallet provider IS injected and
+ * connecting works normally. This is the cross-platform (Android + iOS) path;
+ * a plain mobile browser never injects the extension provider, so the only way
+ * to connect on mobile is to hand off to Phantom's own browser.
+ */
+function phantomBrowseLink(): string {
+  const target = window.location.href;
+  const ref = window.location.origin;
+  return `https://phantom.app/ul/browse/${encodeURIComponent(
+    target,
+  )}?ref=${encodeURIComponent(ref)}`;
+}
 
 interface WalletConnectModalProps {
   open: boolean;
@@ -23,6 +38,15 @@ interface WalletConnectModalProps {
  */
 export default function WalletConnectModal({ open, onClose }: WalletConnectModalProps) {
   const { wallets, select, connected, connecting } = useWallet();
+
+  // Detect a phone (client-only, after mount → no hydration mismatch). On
+  // mobile we can't inject the extension, so the "no wallet" path offers a
+  // deep-link into Phantom's in-app browser instead of a desktop install flow.
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    setIsMobile(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent));
+  }, []);
 
   // Installed (Wallet-Standard) wallets, with Phantom pinned to the top.
   const installed = useMemo(
@@ -89,6 +113,38 @@ export default function WalletConnectModal({ open, onClose }: WalletConnectModal
               </span>
             </button>
           ))
+        ) : isMobile ? (
+          <div className="flex flex-col gap-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+              <p className="text-[13px] leading-relaxed text-white/70">
+                On mobile, open VibeFlip inside{" "}
+                <span className="text-white">Phantom&apos;s</span> built-in
+                browser to connect. Make sure Phantom is switched to{" "}
+                <span className="text-white">Devnet</span>.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.href = phantomBrowseLink();
+              }}
+              className="group flex items-center justify-between rounded-2xl border border-main/30 bg-main/[0.08] px-4 py-3.5 transition-colors hover:bg-main/[0.14]"
+            >
+              <span className="font-display text-[15px] font-semibold text-white">
+                Open in Phantom
+              </span>
+              <ArrowUpRight className="h-4 w-4 text-main-light transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
+            <a
+              href={PHANTOM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1 self-center vf-mono text-[11px] text-white/45 transition-colors hover:text-main-light"
+            >
+              Don&apos;t have Phantom? Install it
+              <ArrowUpRight className="h-3 w-3" />
+            </a>
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">

@@ -19,16 +19,46 @@ export default function Modal({
   subtitle,
   children,
 }: ModalProps) {
+  // Close on Escape.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
-    document.documentElement.classList.add("no-doc-scroll");
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.documentElement.classList.remove("no-doc-scroll");
-    };
+    return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  // Lock background scroll while open. On touch devices `overflow:hidden` alone
+  // doesn't stop the page scrolling behind the sheet (mobile Safari/Chrome
+  // ignore it), so we pin <body> with `position:fixed` and restore the scroll
+  // position on close. Desktop keeps the lighter overflow-lock (no layout jump,
+  // scrollbar gutter stays reserved).
+  useEffect(() => {
+    if (!open) return;
+    const isTouch =
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: coarse)").matches;
+
+    if (!isTouch) {
+      document.documentElement.classList.add("no-doc-scroll");
+      return () => document.documentElement.classList.remove("no-doc-scroll");
+    }
+
+    const scrollY = window.scrollY;
+    const body = document.body;
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    return () => {
+      body.style.position = "";
+      body.style.top = "";
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [open]);
 
   return (
     <AnimatePresence>
